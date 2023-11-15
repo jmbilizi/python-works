@@ -2,7 +2,7 @@
 print('Hello World')
 
 # variable definition in py
-my_name = 'Janvier'
+my_name: str = 'Janvier'
 print('My name is ' + my_name)
 
 # function declaration in py
