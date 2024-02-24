@@ -27,3 +27,4 @@
 - To install pytorch; run `pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118`
 - To see what has been install in our virtual environment, run `pip freeze`
 - To upgrade pip version, run `python.exe -m pip install --upgrade pip`
+- To apply migration, run `python manage.py migrate`

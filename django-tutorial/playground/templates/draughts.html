@@ -1,0 +1,55 @@
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>International Draughts Board</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f0f0f0;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100vw;
+      height: 100vh;
+      /* max-width: 100%; */ /* Removed max-width */
+      /* max-height: 100%; */ /* Removed max-height */
+    }
+
+    td {
+      width: 10%;
+      height: 60px;
+      text-align: center;
+      font-size: 20px;
+    }
+
+    .dark {
+      background-color: gray;
+      color: #fff;
+    }
+
+    .light {
+      background-color: #fff;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <table>
+    {% for row in board %}
+    <tr>
+      {% for cell in row %} {% if cell.dark %}
+      <td class="light">{% comment %} {{ cell.value }} {% endcomment %}</td>
+      {% else %}
+      <td class="dark">
+        {{ cell.value }}
+      </td>
+      {% endif %} {% endfor %}
+    </tr>
+    {% endfor %}
+  </table>
+</body>
