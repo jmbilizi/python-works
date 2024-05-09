@@ -124,3 +124,18 @@ function averageOfNodeAtEachLevel(root) {
 
   return averages;
 }
+
+
+// Given a binary tree, get the average value at each level of the tree
+
+// Input
+
+//        4
+//       / \
+//      7   9
+//     / \   \
+//    10  2   6
+//         \
+//          6
+//         /
+//        2

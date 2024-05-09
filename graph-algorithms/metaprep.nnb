@@ -1,0 +1,45 @@
+{
+    "cells": [
+        {
+            "language": "typescript",
+            "source": [
+                "console.log('Fuck yeah!')"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "Fuck yeah!",
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "// Given a binary tree, get the average value at each level of the tree\r\n\r\n// Input\r\n\r\n//        4\r\n//       / \\\r\n//      7   9\r\n//     / \\   \\\r\n//    10  2   6\r\n//         \\\r\n//          6\r\n//         /\r\n//        2"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "class TreeNode {\r\n    val: any;\r\n    left: null;\r\n    right: null;\r\n    constructor(val) {\r\n        this.val = val;\r\n        this.left = null;\r\n        this.right = null;\r\n    }\r\n}\r\n\r\ninterface nodeType {\r\n    val: any;\r\n    left: any;\r\n    right: any;\r\n}\r\n\r\nconst getAverageValueAtEachLeavel = (root?: nodeType) => {\r\n    if(root == null) return [];\r\n\r\n    const levels: Record<number, number[]> = {}; // space complexity: 0(n)\r\n\r\n    const queue: [nodeType, number][] = [[root, 0]];\r\n\r\n    while(queue.length > 0) {\r\n        const item = queue.shift();\r\n        if(item){\r\n            const node = item[0];\r\n            const level = item[1];\r\n            if(!levels[level]) levels[level] = [];\r\n            levels[level].push(node.val);\r\n\r\n            if(node.right) queue.push([node.right, level + 1]);\r\n            if(node.left) queue.push([node.left, level + 1]);\r\n        }\r\n    }\r\n\r\n    const nodes_grouped_by_level: number[][] = Object.values(levels);\r\n\r\n    const average_per_level = nodes_grouped_by_level.map(level_nodes => {\r\n        const sum = level_nodes.reduce((partialSum, acc) => partialSum + acc, 0);\r\n        return sum / level_nodes.length\r\n    })\r\n\r\n    return average_per_level\r\n}"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "function rotationalCipher(input, rotationFactor) {\r\n    // Write your code here\r\n    const lowercase = 'abcdefghijklmnopqrstuvwxyz';\r\n    const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';\r\n    const numbers = \"0123456789\"\r\n  \r\n    let result = '';\r\n  \r\n    for (let i = 0; i < input.length; i++) {\r\n        const char = input[i];\r\n        let newChar = char;\r\n  \r\n        if (lowercase.includes(char)) {\r\n            const index = (lowercase.indexOf(char) + rotationFactor) % 26;\r\n            newChar = lowercase[index];\r\n        } else if (uppercase.includes(char)) {\r\n            const index = (uppercase.indexOf(char) + rotationFactor) % 26;\r\n            newChar = uppercase[index];\r\n        } else if (numbers.includes(char)) {\r\n            const index = (numbers.indexOf(char) + rotationFactor) % 10;\r\n            newChar = numbers[index];\r\n        } else {\r\n          newChar = char;\r\n        }\r\n  \r\n        result += newChar;\r\n    }\r\n  \r\n    return result;\r\n  }"
+            ],
+            "outputs": []
+        }
+    ]
+}
