@@ -91,13 +91,15 @@ function treeMinValueRec(root) {
 }
 
 // Max root to leaf path sum
-function maxRootToLeafPathSum(root){
-    if(root == null) return -Number.MAX_VALUE;
-    if(root.right == null && root.left == null) return root.val;
-    const maxChild = Math.max(maxRootToLeafPathSum(root.right), maxRootToLeafPathSum(root.left));
-    return root.val + maxChild;
+function maxRootToLeafPathSum(root) {
+  if (root == null) return -Number.MAX_VALUE;
+  if (root.right == null && root.left == null) return root.val;
+  const maxChild = Math.max(
+    maxRootToLeafPathSum(root.right),
+    maxRootToLeafPathSum(root.left)
+  );
+  return root.val + maxChild;
 }
-
 
 // average value of nodes at each level
 
@@ -125,6 +127,13 @@ function averageOfNodeAtEachLevel(root) {
   return averages;
 }
 
+class Node {
+  constructor(val) {
+    this.val = val;
+    this.right = null;
+    this.left = null;
+  }
+}
 
 // Given a binary tree, get the average value at each level of the tree
 

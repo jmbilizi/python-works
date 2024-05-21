@@ -30,16 +30,537 @@
         {
             "language": "typescript",
             "source": [
-                "class TreeNode {\r\n    val: any;\r\n    left: null;\r\n    right: null;\r\n    constructor(val) {\r\n        this.val = val;\r\n        this.left = null;\r\n        this.right = null;\r\n    }\r\n}\r\n\r\ninterface nodeType {\r\n    val: any;\r\n    left: any;\r\n    right: any;\r\n}\r\n\r\nconst getAverageValueAtEachLeavel = (root?: nodeType) => {\r\n    if(root == null) return [];\r\n\r\n    const levels: Record<number, number[]> = {}; // space complexity: 0(n)\r\n\r\n    const queue: [nodeType, number][] = [[root, 0]];\r\n\r\n    while(queue.length > 0) {\r\n        const item = queue.shift();\r\n        if(item){\r\n            const node = item[0];\r\n            const level = item[1];\r\n            if(!levels[level]) levels[level] = [];\r\n            levels[level].push(node.val);\r\n\r\n            if(node.right) queue.push([node.right, level + 1]);\r\n            if(node.left) queue.push([node.left, level + 1]);\r\n        }\r\n    }\r\n\r\n    const nodes_grouped_by_level: number[][] = Object.values(levels);\r\n\r\n    const average_per_level = nodes_grouped_by_level.map(level_nodes => {\r\n        const sum = level_nodes.reduce((partialSum, acc) => partialSum + acc, 0);\r\n        return sum / level_nodes.length\r\n    })\r\n\r\n    return average_per_level\r\n}"
+                "\r\nclass TreeNode {\r\n    val: any;\r\n    left: null;\r\n    right: null;\r\n    constructor(val) {\r\n        this.val = val;\r\n        this.left = null;\r\n        this.right = null;\r\n    }\r\n}\r\n\r\ninterface nodeType {\r\n    val: any;\r\n    left: any;\r\n    right: any;\r\n}\r\n\r\nconst getAverageValueAtEachLeavel = (root?: nodeType) => {\r\n    if(root == null) return [];\r\n    const levels: Record<number, number[]> = {}; // space complexity: 0(L), where L is number of level\r\n    const queue: [nodeType, number][] = [[root, 0]];\r\n    while(queue.length > 0) {\r\n        const item = queue.shift();\r\n        if(item){\r\n            const node = item[0];\r\n            const level = item[1]\r\n\r\n            if(!levels[level]) levels[level] = [0, 0];\r\n            levels[level][0] = levels[level][0] + node.val\r\n            levels[level][1] = levels[level][1] + 1\r\n\r\n            if(node.right) queue.push([node.right, level + 1]);\r\n            if(node.left) queue.push([node.left, level + 1]);\r\n        }\r\n    }\r\n    const tree_level_avarages = Object.values(levels).map(item => item[0]/item[1]);\r\n\r\n    return tree_level_avarages\r\n}"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "class NodeClass {\r\n    val: any;\r\n    left: any;\r\n    right: any;\r\n    constructor(val) {\r\n        this.val = val;\r\n        this.left = null;\r\n        this.right = null;\r\n    }\r\n}\r\n\r\n//        4\r\n//       / \\\r\n//      7   9\r\n//     / \\   \\\r\n//    10  2   6\r\n//         \\\r\n//          6\r\n//         /\r\n//        2\r\n\r\nconst node_1 = new NodeClass(4);\r\nconst node_2 = new NodeClass(7);\r\nconst node_3 = new NodeClass(9);\r\nconst node_4 = new NodeClass(10);\r\nconst node_5 = new NodeClass(2);\r\nconst node_6 = new NodeClass(6);\r\nconst node_7 = new NodeClass(6);\r\nconst node_8 = new NodeClass(2);\r\n\r\nnode_1.left = node_2;\r\nnode_1.right = node_3;\r\n\r\nnode_2.left = node_4;\r\nnode_2.right = node_5;\r\n\r\nnode_3.right = node_6;\r\n\r\nnode_5.right = node_7;\r\n\r\nnode_7.left = node_8;\r\n\r\nconsole.log(node_5)\r\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "NodeClass {",
+                                "  val: 2,",
+                                "  left: null,",
+                                "  right: NodeClass {",
+                                "    val: 6,",
+                                "    left: NodeClass { val: 2, left: null, right: null },",
+                                "    right: null",
+                                "  }",
+                                "}",
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "/**\r\n * \r\n * @param root \r\n * @returns \r\n */\r\ninterface IQueueItem {\r\n    node: nodeType,\r\n    level: number\r\n}\r\nfunction groupTreeDataByLevel(root: nodeType){\r\n\r\n    if(root == null) return []\r\n\r\n    const levels: Record<number, number[]> = {};\r\n\r\n    let queue: IQueueItem[] = [{ node: root, level: 1}];\r\n\r\n    while(queue.length > 0){\r\n        let item = queue.shift();\r\n\r\n        if(item){\r\n            let node = item.node;\r\n            let level = item.level;\r\n\r\n            if(!levels[level]) levels[level] = [0, 0];\r\n            levels[level][0] = levels[level][0] + node.val\r\n            levels[level][1] = levels[level][1] + 1\r\n\r\n            if(node.left) queue.push({ node: node.left, level: level + 1});\r\n            if(node.right) queue.push({ node: node.right, level: level + 1});\r\n        }\r\n        \r\n    }\r\n\r\n    const tree_level_avarages = Object.values(levels).map(item => item[0]/item[1]);\r\n\r\n    return tree_level_avarages\r\n}\r\n\r\n\r\ngroupTreeDataByLevel(node_1)"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "text/plain",
+                            "value": [
+                                "[",
+                                "  \u001b[33m4\u001b[39m,",
+                                "  \u001b[33m8\u001b[39m,",
+                                "  \u001b[33m6\u001b[39m,",
+                                "  \u001b[33m6\u001b[39m,",
+                                "  \u001b[33m2\u001b[39m",
+                                "]"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "function getAverageValueAtEachLeavel2(root: nodeType){\r\n\r\n    if(root == null) return []\r\n\r\n    const levels: Record<number, number> = {};\r\n\r\n    interface IQueue {\r\n        node: nodeType,\r\n        level: number\r\n    }\r\n    let queue: IQueue[] = [{ node: root, level: 1}];\r\n\r\n    while(queue.length > 0){\r\n        let item = queue.shift();\r\n\r\n        if(item){\r\n            let node = item.node;\r\n            let level = item.level;\r\n\r\n            if(!levels[level]) levels[level] = 0;\r\n            levels[level] = levels[level] + level\r\n\r\n            if(node.left) queue.push({ node: node.left, level: level + 1});\r\n            if(node.right) queue.push({ node: node.right, level: level + 1});\r\n        }\r\n        \r\n    }\r\n\r\n    return Object.values(levels)\r\n}"
             ],
             "outputs": []
         },
         {
             "language": "typescript",
             "source": [
-                "function rotationalCipher(input, rotationFactor) {\r\n    // Write your code here\r\n    const lowercase = 'abcdefghijklmnopqrstuvwxyz';\r\n    const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';\r\n    const numbers = \"0123456789\"\r\n  \r\n    let result = '';\r\n  \r\n    for (let i = 0; i < input.length; i++) {\r\n        const char = input[i];\r\n        let newChar = char;\r\n  \r\n        if (lowercase.includes(char)) {\r\n            const index = (lowercase.indexOf(char) + rotationFactor) % 26;\r\n            newChar = lowercase[index];\r\n        } else if (uppercase.includes(char)) {\r\n            const index = (uppercase.indexOf(char) + rotationFactor) % 26;\r\n            newChar = uppercase[index];\r\n        } else if (numbers.includes(char)) {\r\n            const index = (numbers.indexOf(char) + rotationFactor) % 10;\r\n            newChar = numbers[index];\r\n        } else {\r\n          newChar = char;\r\n        }\r\n  \r\n        result += newChar;\r\n    }\r\n  \r\n    return result;\r\n  }"
+                "/**\r\n * @param input \r\n * @param rotationFactor \r\n * @returns \r\n */\r\nfunction rotationalCipher(input, rotationFactor) {\r\n    // Write your code here\r\n    const lowercase = 'abcdefghijklmnopqrstuvwxyz';\r\n    const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';\r\n    const numbers = \"0123456789\";\r\n  \r\n    let result = '';\r\n  \r\n    for (let i = 0; i < input.length; i++) {\r\n        const char = input[i];\r\n        let newChar = char;\r\n  \r\n        if (lowercase.includes(char)) {\r\n            const index = (lowercase.indexOf(char) + rotationFactor) % 26;\r\n            newChar = lowercase[index];\r\n        } else if (uppercase.includes(char)) {\r\n            const index = (uppercase.indexOf(char) + rotationFactor) % 26;\r\n            newChar = uppercase[index];\r\n        } else if (numbers.includes(char)) {\r\n            const index = (numbers.indexOf(char) + rotationFactor) % 10;\r\n            newChar = numbers[index];\r\n        } else {\r\n          newChar = char;\r\n        }\r\n  \r\n        result += newChar;\r\n    }\r\n  \r\n    return result;\r\n}\r\n\r\nrotationalCipher(\"12349\", 3)"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "4",
+                                "5",
+                                "6",
+                                "7",
+                                "2",
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "text/plain",
+                            "value": [
+                                "\u001b[32m'45672'\u001b[39m"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "/**\r\n * @param (word) this is to do xwz\r\n * @returns boolean weither word is real or not\r\n */\r\n\r\n"
             ],
             "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "/**\r\n * \r\n * @param n where n an integer\r\n * @returns factorial of the n imput\r\n */\r\nfunction factorial(n: number){\r\n    if(n <= 1) return 1;\r\n  \r\n    let n_minus_1_fact = factorial(n-1);\r\n  \r\n    return n * n_minus_1_fact;\r\n}\r\n\r\nfactorial(4)"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "text/plain",
+                            "value": [
+                                "\u001b[33m24\u001b[39m"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "function fibonacci(n: number){\r\n    if(n <= 2) return 1;\r\n\r\n    let fib_n = fibonacci(n-1) + fibonacci(n-2);\r\n\r\n    return fib_n\r\n};\r\n\r\nfibonacci(15)"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "text/plain",
+                            "value": [
+                                "\u001b[33m610\u001b[39m"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "// Given a binary tree, get the average value at path level of the tree\r\n\r\n// Input\r\n\r\n//        4\r\n//       / \\\r\n//      7   9\r\n//     / \\   \\\r\n//    10  2   6\r\n//         \\\r\n//          6\r\n//         /\r\n//        2"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "interface nodeType {\r\n    val: any;\r\n    left: any;\r\n    right: any;\r\n}\r\n\r\ninterface IstackItem {\r\n    node: nodeType,\r\n    path: any[]\r\n}\r\n\r\nconst groupNodesByPath = (root?: nodeType) => {\r\n    if(root == null) return [];\r\n    const paths: any[][] = []; // space complexity: 0(P), where P is number of path\r\n    const stack: IstackItem[] = [{ node: root, path: [root.val] }];\r\n\r\n    while(stack.length > 0) {\r\n        const stackItem = stack.pop();\r\n        if(stackItem){\r\n\r\n            const { node, path } = stackItem;\r\n        \r\n            // Check if the node is a leaf\r\n            if (!node.left && !node.right) {\r\n                paths.push(path);\r\n            }\r\n            \r\n            // Add children to the stack with updated paths\r\n            if (node.right) {\r\n                stack.push({ node: node.right, path: [...path, node.right.val] });\r\n            }\r\n            if (node.left) {\r\n                stack.push({ node: node.left, path: [...path, node.left.val] });\r\n            }\r\n        }\r\n\r\n    }\r\n\r\n    return paths;\r\n}\r\n\r\ngroupNodesByPath(node_1);"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "text/plain",
+                            "value": [
+                                "[",
+                                "  [",
+                                "    \u001b[33m4\u001b[39m,",
+                                "    \u001b[33m7\u001b[39m,",
+                                "    \u001b[33m10\u001b[39m",
+                                "  ],",
+                                "  [",
+                                "    \u001b[33m4\u001b[39m,",
+                                "    \u001b[33m7\u001b[39m,",
+                                "    \u001b[33m2\u001b[39m,",
+                                "    \u001b[33m6\u001b[39m,",
+                                "    \u001b[33m2\u001b[39m",
+                                "  ],",
+                                "  [",
+                                "    \u001b[33m4\u001b[39m,",
+                                "    \u001b[33m9\u001b[39m,",
+                                "    \u001b[33m6\u001b[39m",
+                                "  ]",
+                                "]"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "interface nodeType {\r\n    val: any;\r\n    left: any;\r\n    right: any;\r\n}\r\n\r\ninterface IstackItem2 {\r\n    node: nodeType,\r\n    pathSum: number\r\n}\r\n\r\nconst getSumValueAtEachPath = (root?: nodeType) => {\r\n    if(root == null) return [];\r\n    const paths = {}; // space complexity: 0(P), where P is number of path\r\n    const stack: IstackItem2[] = [{ node: root, pathSum: root.val }];\r\n    \r\n    let pathNumber = 1;\r\n\r\n    while(stack.length > 0) {\r\n        const stackItem = stack.pop();\r\n        if(stackItem){\r\n\r\n            const { node, pathSum } = stackItem;\r\n\r\n            // Check if the node is a leaf\r\n            if (!node.left && !node.right) {\r\n                paths[pathNumber] = pathSum;\r\n                pathNumber++\r\n            }\r\n            \r\n            // Add children to the stack with updated paths\r\n            if (node.right) {\r\n                stack.push({ node: node.right, pathSum: pathSum + node.right.val });\r\n            }\r\n            if (node.left) {\r\n                stack.push({ node: node.left, pathSum: pathSum + node.left.val });\r\n            }\r\n        }\r\n\r\n    }\r\n\r\n    return paths;\r\n}\r\n\r\ngetSumValueAtEachPath(node_1);"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "text/plain",
+                            "value": [
+                                "{",
+                                "  \u001b[32m'1'\u001b[39m: \u001b[33m21\u001b[39m,",
+                                "  \u001b[32m'2'\u001b[39m: \u001b[33m21\u001b[39m,",
+                                "  \u001b[32m'3'\u001b[39m: \u001b[33m19\u001b[39m",
+                                "}"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "interface nodeType {\r\n    val: any;\r\n    left: any;\r\n    right: any;\r\n}\r\n\r\ninterface IstackItem3 {\r\n    node: nodeType,\r\n    pathSum: number,\r\n    pathCount: number\r\n}\r\n\r\nfunction getAverageValueAtEachPath(root?: nodeType){\r\n    const averages: number[] = [];\r\n\r\n    if(!root) return averages;\r\n\r\n    const stack: IstackItem3[] = [{node: root, pathSum: root.val, pathCount: 1}];\r\n\r\n    while(stack.length > 0) {\r\n        const stackItem = stack.pop();\r\n        if(stackItem){\r\n            const { node, pathSum, pathCount } = stackItem;\r\n\r\n            if(!node.left && !node.right) averages.push(pathSum / pathCount);\r\n\r\n            if(node.right) stack.push({ node: node.right, pathSum: pathSum + node.right.val, pathCount: pathCount + 1});\r\n            if(node.left) stack.push({ node: node.left, pathSum: pathSum + node.left.val, pathCount: pathCount + 1});\r\n        }\r\n        \r\n    }\r\n\r\n    return averages;\r\n}\r\n\r\ngetAverageValueAtEachPath(node_1)"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "text/plain",
+                            "value": [
+                                "[",
+                                "  \u001b[33m7\u001b[39m,",
+                                "  \u001b[33m4.2\u001b[39m,",
+                                "  \u001b[33m6.333333333333333\u001b[39m",
+                                "]"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "markdown",
+            "source": [
+                "## Binary Search"
+            ],
+            "outputs": []
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "const arr = [1, 3, 4, 5, 7, 8, 9, 17, 30, 37, 50];\r\n\r\nfunction binarySearch(arr, target) {\r\n    if(!arr?.length) return false;\r\n    let start = 0;\r\n    let end = arr.length - 1;\r\n\r\n    while(start <= end){\r\n        let mid = Math.floor((start + end) / 2);\r\n\r\n        if(target == arr[mid]) return true;\r\n\r\n        if(target > arr[mid]) start = mid + 1;\r\n\r\n        if(target < arr[mid]) end = mid - 1;\r\n    }\r\n\r\n    return false\r\n};\r\n\r\n\r\nbinarySearch(arr, 7)"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "text/plain",
+                            "value": [
+                                "\u001b[33mtrue\u001b[39m"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "function binarySearch2(arr, target) {\r\n    if(!arr?.length) return -1;\r\n\r\n    let left = 0;\r\n    let right = arr.length -1;\r\n\r\n    while(left <= right){\r\n        const middle = Math.floor((left + right) / 2);\r\n\r\n        if(target == arr[middle]) return middle;\r\n\r\n        if(target > arr[middle]) left = middle + 1;\r\n\r\n        if(target < arr[middle]) right = middle - 1;\r\n    }\r\n\r\n    return -1\r\n}\r\n\r\nbinarySearch2(arr, 7)"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "text/plain",
+                            "value": [
+                                "\u001b[33m4\u001b[39m"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "\r\n\r\nfunction binarySearch3(arr, target){\r\n    if(!arr?.length) return -1;\r\n\r\n    let start = 0;\r\n    let end = arr.length - 1;\r\n\r\n    while(start <= end){\r\n        let mid = Math.floor((start + end) / 2);\r\n\r\n        if(target == arr[mid]) return mid;\r\n\r\n        if(target > arr[mid]) start = mid + 1;\r\n\r\n        if(target < arr[mid]) end = mid - 1;\r\n    }\r\n\r\n    return -1\r\n}\r\n\r\nconst myArr = [1, 3, 4, 5, 7, 8, 9, 17, 30, 37, 50];\r\n\r\n// binarySearch3(myArr, 31)\r\n\r\n\r\nconst data = [\"d\", \"e\", \"g\", \"a\", \"b\", \"c\"]\r\n\r\nconst x = data.sort();\r\n\r\nbinarySearch3(x, \"j\")\r\n"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "text/plain",
+                            "value": [
+                                "\u001b[33m-1\u001b[39m"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "function frogJump(n) {\r\n    if (n <= 1) return 1;\r\n    return frogJump(n - 1) + frogJump(n - 2);\r\n}\r\n\r\n// Example usage:\r\nlet n = 3;\r\nconsole.log(frogJump(n)); // Output: 5"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "3",
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "function frogJump2(n) {\r\n    if (n <= 1) return 1;  // Base case: if there's 0 or 1 step, there's only 1 way to be at that step.\r\n\r\n    // Initialize dp array with base cases\r\n    let dp = new Array(n + 1).fill(0);\r\n    dp[0] = 1;\r\n    dp[1] = 1;\r\n\r\n    // Fill dp array using the recurrence relation\r\n    for (let i = 2; i <= n; i++) {\r\n        dp[i] = dp[i - 1] + dp[i - 2];\r\n    }\r\n\r\n    // The number of ways to reach the nth step\r\n    return dp[n];\r\n}\r\n\r\n// Example usage:\r\nlet n = 4;\r\nconsole.log(frogJump2(n));  // Output: 5"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "5",
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "let dynProgr = new Array(n + 1).fill(0);\r\ndynProgr"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "text/plain",
+                            "value": [
+                                "[",
+                                "  \u001b[33m0\u001b[39m,",
+                                "  \u001b[33m0\u001b[39m,",
+                                "  \u001b[33m0\u001b[39m,",
+                                "  \u001b[33m0\u001b[39m,",
+                                "  \u001b[33m0\u001b[39m",
+                                "]"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "function fibonacciSeqDP(n: number){\r\n    if(n <= 2) return 1;\r\n\r\n    let store = new Array(n + 1);\r\n    store[1] = 1;\r\n    store[2] = 1;\r\n\r\n    for (let i = 3; i < n + 1; i++){\r\n        store[i] = store[i - 1] + store[i - 2]\r\n    }\r\n\r\n    return store[n]\r\n}\r\n\r\nfibonacciSeqDP(1000)"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "text/plain",
+                            "value": [
+                                "\u001b[33m4.346655768693743e+208\u001b[39m"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "language": "typescript",
+            "source": [
+                "function getMaxAdditionalDinersCount(N, K, M, S) {\r\n    // Sort the existing diners' seats\r\n    S.sort((a, b) => a - b);\r\n\r\n    // Initialize the maximum additional diners count\r\n    let maxAdditionalDiners = 0;\r\n\r\n    // Consider the spaces at the beginning and end of the table\r\n    maxAdditionalDiners = Math.max(maxAdditionalDiners, S[0] - K - 1);\r\n    maxAdditionalDiners = Math.max(maxAdditionalDiners, N - S[M - 1] - K);\r\n\r\n    // Calculate the maximum additional diners count between each pair of existing diners\r\n    for (let i = 0; i < M - 1; i++) {\r\n        const distanceBetweenDiners = S[i + 1] - S[i] - 1;\r\n        const additionalDiners = Math.max(0, distanceBetweenDiners - 2 * K);\r\n        maxAdditionalDiners += additionalDiners;\r\n    }\r\n\r\n    return maxAdditionalDiners;\r\n}\r\n\r\nlet N = 10\r\nlet K = 1\r\nlet M = 2\r\nlet S = [2, 6]\r\n\r\ngetMaxAdditionalDinersCount(N, K, M, S)"
+            ],
+            "outputs": [
+                {
+                    "items": [
+                        {
+                            "mime": "application/vnd.code.notebook.stdout",
+                            "value": [
+                                "",
+                                ""
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "mime": "text/plain",
+                            "value": [
+                                "\u001b[33m4\u001b[39m"
+                            ]
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }
