@@ -162,13 +162,46 @@ cython_debug/
 #.idea/
 
 # Large model files (too big for GitHub)
-*.h5
+# *.h5 too broad
 *.hdf5
+*.mat
 resnet50.*
-*signs.h5
+# *signs.h5 -signs datasets are essential for the project, so we want to keep them in version control
 *.data-*
+variables.data-*
+saved_model.pb
 
+# specific large model files to ignore
+model.h5
+**/pretrained_model/*.h5
+keras-facenet-h5/model.h5
+vgg19_weights_tf_dim_ordering_tf_kernels_notop.h5
+imagenet-vgg-verydeep-19.mat
+
+# Allow small course model files but block large ones
+# Block large VGG/ResNet models but allow small assignment models
+**/models/vgg*.h5
+**/models/resnet*.h5
+**/models/*_facetnet*.h5
+
+# Transformer model files (large pre-trained models)
+**/model/tf_model.h5
+**/model/tensorflow/tf_model.h5
+**/model/pytorch/pytorch_model.bin
 
 # TensorFlow logs
 logs/
 tensorboard_logs/
+
+# Output folders (generated content)
+output/
+**/outputs/
+
+# Pre-trained word embeddings(downloadable)
+**/glove.*.txt
+
+# Large preprocessed training data (can be regenerated)
+**/X_dev.npy
+**/X.npy
+**/Y_dev.npy
+**/Y.npy
